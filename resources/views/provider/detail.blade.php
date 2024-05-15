@@ -1,16 +1,23 @@
 @extends('adminlte::page')
 
-@section('title', 'Mantenimiento de Proveedores')
+@section('title', 'Perfiles de la cuenta')
 
 @section('content_header')
-    <h1>Mantenimiento de Proveedores</h1>
+<div class="row">
+    <div class="col-md-auto">
+        <h1>Proveedor: {{$provider->name}}</h1>    
+    </div>
+    <div class="col">
+        <a href="{{route('provider.index')}}" class="btn btn-outline-dark" role="button">Atras</a>
+    </div>
+</div>
 @stop
 
 @section('content')
     <div>
         <div class="row">
             <div class="form-group col-md-6">
-                <a href="#" id="newProvider" class="btn btn-primary">Crear Nuevo Proveedor</a>
+                <a href="#" id="newService" class="btn btn-primary">Agregar Servicio</a>
             </div>    
         </div>
     </div>
@@ -18,16 +25,13 @@
     <div>
         <x-adminlte-card>
             <div class="card-body">
-                <table id="dtProvider" class="row-border" style="width:100%">
+                <table id="dtServiceProvider" class="row-border" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Telefono</th>
-                            <th>Contacto</th>
-                            <th>Contacto Telf</th>
-                            <th>Zona</th>
-                            <th>Opciones</th>
+                        <th>Id</th>
+                        <th>Servicio</th>
+                        <th>Descripción</th>
+                        <th>Opciones</th>
                         </tr>
                     </thead>
                 </table>
@@ -35,7 +39,7 @@
         </x-adminlte-card>
     </div>
 
-    @include('provider.add-modal')
+    @include('provider.service-modal')
 @stop
 
 @section('css')
@@ -48,28 +52,26 @@
     var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
     $(document).ready(function() {
-        let _providerId = $("#providerId");
+        let _serviceproviderId = $("#serviceProviderId");
         let _name = $("#name");
-        let _phone = $("#phone");
-        let _contactName = $("#contactName");
-        let _contactPhone = $("#contactPhone");
         let _description = $("#description");
-        let _zoneId = $("#zoneId");
-        let _dtProvider = $("#dtProvider");
+        let _providerId = $("#providerId");
+
+        let _dtServiceProvider = $("#dtServiceProvider");
         let _modal = $("#addModal");
         let _modalLabel = $("#addModalLabel");
         let _ds=null;
 
         function fetch() {
             $.ajax({
-                url: "{{ route('provider.list') }}",
+                url: "{{ route('provider.listservice') }}",
                 type: "Get",
-                data: {},
+                data: {providerId:{{$provider->id}}},
                 dataType: "json",
                 success: function(data) {
-                    _ds = data.providers;
-                    _dtProvider.DataTable({
-                        "data": data.providers,
+                    _ds = data.services;
+                    _dtServiceProvider.DataTable({
+                        "data": data.services,
                         "responsive": true,
                         order: [[0, 'desc']],
                         "columns": [
@@ -85,28 +87,12 @@
                             },
                             {
                                 "render": function(data, type, row, meta) {
-                                    return row.phone;
+                                    return row.description;
                                 }
                             },
                             {
                                 "render": function(data, type, row, meta) {
-                                    return row.contactName;
-                                }
-                            },
-                            {
-                                "render": function(data, type, row, meta) {
-                                    return row.contactPhone;
-                                }
-                            },
-                            {
-                                "render": function(data, type, row, meta) {
-                                    
-                                    return row.zoneName;
-                                }
-                            },
-                            {
-                                "render": function(data, type, row, meta) {
-                                    return '<a href="/provider-detail/'+row.id+'" class="btn btn-sm btn-warning detailProvider"><i class="far fa-eye"></i></a> <a href="#" data-index="'+meta.row+'" class="btn btn-sm btn-info editProvider">Editar</a> <a href="#" data-id="'+row.id+'" class="btn btn-sm btn-danger removeProvider"><i class="far fa-trash-alt"></i></a>';
+                                    return '<a href="#" data-index="'+meta.row+'" class="btn btn-sm btn-info editService">Editar</a> <a href="#" data-id="'+row.id+'" class="btn btn-sm btn-danger removeService"><i class="far fa-trash-alt"></i></a>';
                                 }
                             }
                         ]
@@ -116,10 +102,10 @@
         }
         fetch();
 
-        $('#newProvider').on('click', function(e) {
+        $('#newService').on('click', function(e) {
             e.preventDefault();
             clearForm();
-            _modalLabel.text("Nuevo Proveedor");
+            _modalLabel.text("Nuevo Servicio");
             _modal.modal('show');
             
             setTimeout(function(){
@@ -128,34 +114,26 @@
         });
         
         function clearForm() {
-            _providerId.val("");
+            _serviceproviderId.val("");
             _name.val("");
-            _phone.val("");
-            _contactName.val("");
-            _contactPhone.val("");
             _description.val("");
-            _zoneId.val("").change();
         }
         
-        $('#addProvider').on('click', function(e) {
+        $('#addServiceProvider').on('click', function(e) {
             e.preventDefault();
             let elements = [
-                ['name', 'Ingrese el nombre del proveedor'],
-                ['phone', 'Ingrese el telefono del proveedor'],
-                ['contactName', 'Ingrese el nombre del contacto'],
-                ['contactPhone', 'Ingrese el teléfono del contacto'],
-                ['zoneId', 'Ingrese la zona']
+                ['name', 'Ingrese el nombre del servicio']
             ];
 
             if(emptyfy(elements)) {
-                let providerId = _providerId.val();
-                var myform = document.getElementById('frmAddProvider');
+                let serviceproviderId = _serviceproviderId.val();
+                var myform = document.getElementById('frmAddServiceProvider');
                 var form = new FormData(myform);
                 form.append('_token',CSRF_TOKEN);
-
-                let route = "{{ route('provider.add') }}";
-                if(providerId!="") {
-                    route = "{{ route('provider.edit') }}";
+                
+                let route = "{{ route('provider.addservice') }}";
+                if(serviceproviderId!="") {
+                    route = "{{ route('provider.editservice') }}";
                 }
 
                 $.ajax({
@@ -169,7 +147,7 @@
                         if(res.status=="success"){
                             _modal.modal('hide');
                             clearForm();
-                            _dtProvider.DataTable().destroy();
+                            _dtServiceProvider.DataTable().destroy();
                             fetch();
                         }
                         if(res.status=="error"){
@@ -182,30 +160,26 @@
             }
         });
 
-        _dtProvider.on('click', '.editProvider', function (e) {
+        _dtServiceProvider.on('click', '.editService', function (e) {
             e.preventDefault();
             let index = $(this).data('index');
             let rw = _ds[index];
             with (rw) {
-                _providerId.val(id);
+                _serviceproviderId.val(id);
                 _name.val(name);
-                _phone.val(phone);
-                _contactName.val(contactName);
-                _contactPhone.val(contactPhone);
                 _description.val(description);
-                _zoneId.val(zoneId).change();
             }
             
-            _modalLabel.text("Editar Proveedor");
+            _modalLabel.text("Editar Servicio");
             _modal.modal('show');
         });
         
-        _dtProvider.on('click', '.removeProvider', function (e) {
+        _dtServiceProvider.on('click', '.removeService', function (e) {
             e.preventDefault();
-            let providerId = $(this).data('id');
+            let serviceProviderId = $(this).data('id');
             Swal.fire({
                 title: "Atención",
-                text: "Deseas eliminar el porveedor?",
+                text: "Deseas eliminar el servicio?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -214,15 +188,15 @@
                 }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url:"{{ route('provider.remove') }}",
+                        url:"{{ route('provider.removeservice') }}",
                         method:'post',
                         data:{
                             "_token": CSRF_TOKEN,
-                            providerId:providerId
+                            serviceProviderId:serviceProviderId
                         },
                         success:function(res){
                             if(res.status=="success"){
-                                _dtProvider.DataTable().destroy();
+                                _dtServiceProvider.DataTable().destroy();
                                 fetch();
                             }
                         },error:function(err){

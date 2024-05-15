@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Provider;
+use App\Models\ServiceProvider;
 use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -59,6 +60,52 @@ class ProviderController extends Controller
     {
         Provider::find($request->providerId)->delete();      
 
+        return response()->json(['status'=>'success']);
+    }
+
+    public function detail(Request $request): View
+    {
+        $provider = Provider::where('id', $request->providerId)->first();
+
+        return view('provider.detail', ['provider' => $provider]);
+    }
+
+    public function listservice(Request $request): JsonResponse
+    {
+        if ($request->ajax()) {
+            $services = ServiceProvider::select('serviceprovider.id', 'serviceprovider.name', 'serviceprovider.description')
+            ->where('serviceprovider.providerId', $request->providerId)
+            ->get();
+
+            return response()->json(['services' => $services]);
+        } else {
+            abort(403, 'You do not have permission to view this page ');
+        }
+    }
+
+    public function addservice(Request $request)
+    {
+        $serviceProvider = new ServiceProvider();
+        $serviceProvider->name = $request->name;
+        $serviceProvider->description = $request->description;
+        $serviceProvider->providerId = $request->providerId;
+        $serviceProvider->save();
+    
+        return response()->json(['status'=>'success', 'message'=>'El servicio fue agregado']);    
+    }
+    
+    public function editservice(Request $request): JsonResponse 
+    {
+        ServiceProvider::where('id', $request->serviceProviderId)
+            ->update(['name' => $request->name, 'description' => $request->description]);
+    
+        return response()->json(['status'=>'success', 'message'=>'El Servicio fue actualizado']);
+    }
+    
+    public function removeservice(Request $request): JsonResponse
+    {
+        ServiceProvider::find($request->serviceProviderId)->delete();      
+    
         return response()->json(['status'=>'success']);
     }
 }

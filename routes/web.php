@@ -62,5 +62,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/streamingtv/removeprofile', [StreamingTvController::class, 'removeprofile'])->name('streamingtv.removeprofile');
     Route::get('/streamingtv/listprofile', [StreamingTvController::class, 'listprofile'])->name('streamingtv.listprofile');
 
+    Route::get('/provider-detail/{providerId}', [ProviderController::class, 'detail'])->name('provider.detail');
+    Route::post('/provider/addservice', [ProviderController::class, 'addservice'])->name('provider.addservice');
+    Route::post('/provider/editservice', [ProviderController::class, 'editservice'])->name('provider.editservice');
+    Route::post('/provider/removeservice', [ProviderController::class, 'removeservice'])->name('provider.removeservice');
+    Route::get('/provider/listservice', [ProviderController::class, 'listservice'])->name('provider.listservice');
+
     Route::resource('/mikrotiks', MikrotikController::class)->names('mikrotiks');
 });
