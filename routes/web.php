@@ -3,9 +3,12 @@
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ContractController;
 use App\Http\Controllers\MikrotikController;
+use App\Http\Controllers\ModemController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StreamingTvController;
+use App\Http\Controllers\ModemTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,4 +72,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/provider/listservice', [ProviderController::class, 'listservice'])->name('provider.listservice');
 
     Route::resource('/mikrotiks', MikrotikController::class)->names('mikrotiks');
+
+    Route::get('/modemtype', [ModemTypeController::class, 'index'])->name('modemtype.index');
+    Route::post('/modemtype/add', [ModemTypeController::class, 'add'])->name('modemtype.add'); 
+    Route::post('/modemtype/edit', [ModemTypeController::class, 'edit'])->name('modemtype.edit');
+    Route::post('/modemtype/remove', [ModemTypeController::class, 'remove'])->name('modemtype.remove');
+    Route::get('/modemtype/list', [ModemTypeController::class, 'list'])->name('modemtype.list');
+
+    Route::resource('/modem', ModemController::class)->names('modem');
+
+    Route::get('/contract', [ContractController::class, 'index'])->name('contract.index');
+    Route::get('/contract/list', [ContractController::class, 'list'])->name('contract.list');
+    Route::get('/contract/listservice/{providerId}', [ContractController::class, 'listservice'])->name('contract.listservice');
+    Route::post('/contract/add', [ContractController::class, 'add'])->name('contract.add');
+    Route::post('/contract/edit', [ContractController::class, 'edit'])->name('contract.edit');
+        
 });

@@ -11,17 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mikrotik', function (Blueprint $table) {
+        Schema::create('modem', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('Model');
+            $table->string('name');
             $table->string('MAC');
-            $table->string('Identity')->nullable();;
-            $table->string('AccessCodeUrl')->nullable();;
-            $table->string('AccessCodeUser')->nullable();;
-            $table->string('AccessCodePassword')->nullable();;
+            $table->string('DefaultUrl')->nullable();;
+            $table->string('DefaultWifiName')->nullable();;
+            $table->string('DefaultWifiPassword')->nullable();;
             $table->string('photo', 500)->nullable();
+            $table->string('MarkCode')->nullable();;
+            $table->tinyInteger('ConnectionType');
             $table->tinyInteger('State');
             $table->text('Description')->nullable();
+            $table->foreignId('modemTypeId')->constrained('modemtype')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mikrotik');
+        Schema::dropIfExists('modem');
     }
 };

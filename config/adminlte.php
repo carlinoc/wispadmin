@@ -349,7 +349,7 @@ return [
         ],
         [
             'text' => 'Contratos',
-            'url' => '#',
+            'url' => '/contract',
             'icon' => 'fas fa-fw fa-file-alt',
         ],
         [
@@ -389,7 +389,12 @@ return [
                 ],
                 [
                     'text' => 'Modem',
-                    'url' => '#',
+                    'url' => '/modem',
+                    'icon' => 'fas fa-fw fa-wifi',
+                ],
+                [
+                    'text' => 'Tipo de Modem',
+                    'url' => '/modemtype',
                     'icon' => 'fas fa-fw fa-wifi',
                 ],
                 [

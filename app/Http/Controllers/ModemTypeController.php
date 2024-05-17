@@ -4,62 +4,52 @@ namespace App\Http\Controllers;
 
 use App\Models\ModemType;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class ModemTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        return view('modemtype.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function list(Request $request): JsonResponse
     {
-        //
+        if ($request->ajax()) {
+            $modemTypes = ModemType::all();
+            return response()->json(['modemTypes' => $modemTypes]);
+        } else {
+            abort(403, 'You do not have permission to view this page ');
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+
+    public function add(Request $request): JsonResponse
     {
-        //
+        $modemType = new ModemType();
+        $modemType->name = $request->name;
+        $modemType->description = $request->description;
+        $modemType->save();
+
+        return response()->json(['status'=>'success', 'message'=>'El Tipo de Modem fue agregado']);    
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ModemType $modemType)
+    public function edit(Request $request): JsonResponse 
     {
-        //
-    }
+        ModemType::where('id', $request->modemTypeId)
+            ->update(['name' => $request->name, 'description' => $request->description]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ModemType $modemType)
-    {
-        //
+        return response()->json(['status'=>'success', 'message'=>'El Tipo de Modem fue actualizado']);
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ModemType $modemType)
+    
+    public function remove(Request $request): JsonResponse
     {
-        //
-    }
+        ModemType::find($request->modemTypeId)->delete();      
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ModemType $modemType)
-    {
-        //
+        return response()->json(['status'=>'success']);
     }
 }
