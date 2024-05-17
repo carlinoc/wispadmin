@@ -6,6 +6,8 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\MikrotikController;
 use App\Http\Controllers\ModemController;
+use App\Http\Controllers\BrandNameController;
+use App\Http\Controllers\SwitcherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StreamingTvController;
 use App\Http\Controllers\ModemTypeController;
@@ -87,5 +89,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/contract/add', [ContractController::class, 'add'])->name('contract.add');
     Route::post('/contract/edit', [ContractController::class, 'edit'])->name('contract.edit');
     Route::post('/contract/remove/{contractId}', [ContractController::class, 'remove'])->name('contract.remove');
-        
+
+    Route::get('/brandname', [BrandNameController::class, 'index'])->name('brandname.index');
+    Route::post('/brandname/add', [BrandNameController::class, 'add'])->name('brandname.add'); 
+    Route::post('/brandname/edit', [BrandNameController::class, 'edit'])->name('brandname.edit');
+    Route::post('/brandname/remove', [BrandNameController::class, 'remove'])->name('brandname.remove');
+    Route::get('/brandname/list', [BrandNameController::class, 'list'])->name('brandname.list');
+
+    Route::get('/switcher', [SwitcherController::class, 'index'])->name('switcher.index');
+    Route::post('/switcher/add', [SwitcherController::class, 'add'])->name('switcher.add'); 
+    Route::post('/switcher/edit', [SwitcherController::class, 'edit'])->name('switcher.edit');
+    Route::post('/switcher/remove', [SwitcherController::class, 'remove'])->name('switcher.remove');
+    Route::get('/switcher/list', [SwitcherController::class, 'list'])->name('switcher.list');
+
 });
