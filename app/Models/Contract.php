@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ModemType extends Model
+class Contract extends Model
 {
     use HasFactory;
-    protected $table = 'modemtype';
+    protected $table = 'contract';
     public $timestamps = false;
 }
