@@ -46,6 +46,12 @@ class ContractController extends Controller
         return response()->json(['status'=>'success', 'message'=>'El contrato fue agregado']);    
     }
 
+    public function remove(Request $request)
+    {
+        Contract::find($request->contractId)->delete();      
+        return response()->json(['status'=>'success']);
+    }
+
     public function list(Request $request): JsonResponse
     {
         $contracts = Contract::all();

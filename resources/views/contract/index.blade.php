@@ -48,6 +48,8 @@
 <script src="/vendor/datepicker/js/bootstrap-datepicker.min.js"></script>
 <script src="/vendor/admin/main.js"></script>
 <script>
+    const _token = document.head.querySelector("[name~=csrf-token][content]").content;
+
     let _contractId = $("#contractId");
     let _providerId = $("#providerId");
     let _serviceProviderId = $("#serviceProviderId");
@@ -70,8 +72,6 @@
         $("#DateInstall").datepicker({});
         $("#DateInactivity").datepicker({});
     });
-
-    var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
     $(document).ready(function() {
     
@@ -248,6 +248,38 @@
             
             _modalLabel.text("Editar Contrato");
             _modal.modal('show');
+        });
+
+        _dtContract.on('click', '.removeContract', function (e) {
+            e.preventDefault();
+            let contractId = $(this).data('id');
+            
+            Swal.fire({
+                title: "Atención",
+                text: "Deseas eliminar la sección?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch("/contract/remove/" + contractId, {
+                        method: 'post',
+                        body: {contractId : contractId},
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "X-CSRF-Token": _token
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if(result.status=="success"){
+                            fetchContract();
+                        }
+                    });
+                }
+            });
         });
     }
 </script>        

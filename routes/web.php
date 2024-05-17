@@ -86,5 +86,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/contract/listservice/{providerId}', [ContractController::class, 'listservice'])->name('contract.listservice');
     Route::post('/contract/add', [ContractController::class, 'add'])->name('contract.add');
     Route::post('/contract/edit', [ContractController::class, 'edit'])->name('contract.edit');
+    Route::post('/contract/remove/{contractId}', [ContractController::class, 'remove'])->name('contract.remove');
         
 });
