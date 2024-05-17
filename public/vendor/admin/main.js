@@ -75,6 +75,23 @@ function getPlanType(type){
   return _type;
 }
 
+function getStateFromDevice(type){
+  var _type = "Nuevo";
+  switch(type) {
+    case 1:
+      _type = '<small class="badge badge-success">Nuevo</small>';
+      break;
+    case 2:
+      _type = '<small class="badge badge-warning">Usado</small>';
+      break;
+    case 3:
+      _type = '<small class="badge badge-danger">Malogrado</small>';
+      break;
+  }    
+  return _type;
+}
+
+
 (function($) {
   $.fn.inputFilter = function(callback, errMsg) {
     return this.on("input keydown keyup mousedown mouseup select contextmenu drop focusout", function(e) {

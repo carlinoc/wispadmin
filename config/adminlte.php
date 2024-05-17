@@ -362,6 +362,16 @@ return [
             'url' => '#',
             'icon' => 'fas fa-fw fa-address-card',
         ],
+        [
+            'text' => 'Marca',
+            'url' => '/brandname',
+            'icon' => 'fas fa-fw fa-address-card',
+        ],
+        [
+            'text' => 'Switch',
+            'url' => '/switcher',
+            'icon' => 'fas fa-fw fa-address-card',
+        ],
         ['header' => 'Configuración'],
         [
             'text' => 'Inventario',
