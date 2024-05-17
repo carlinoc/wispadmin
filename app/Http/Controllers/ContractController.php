@@ -24,7 +24,7 @@ class ContractController extends Controller
         return view('contract.index', ['providers' => $providers, 'clients' => $clients]);
     }
 
-    public function add(Request $request)
+    public function add(Request $request): JsonResponse
     {
         $dateOrder = Carbon::parse($request->DateOrder);
         $dateInstall = Carbon::parse($request->DateInstall);
@@ -44,6 +44,17 @@ class ContractController extends Controller
         $contract->save();
 
         return response()->json(['status'=>'success', 'message'=>'El contrato fue agregado']);    
+    }
+
+    public function edit(Request $request): JsonResponse 
+    {
+        return response()->json(['status'=>'success', 'message'=>'El contrato fue agregado']);    
+    }
+
+    public function remove(Request $request)
+    {
+        Contract::find($request->contractId)->delete();      
+        return response()->json(['status'=>'success']);
     }
 
     public function list(Request $request): JsonResponse
@@ -85,14 +96,7 @@ class ContractController extends Controller
     {
         //
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Contract $contract)
-    {
-        //
-    }
+   
 
     /**
      * Update the specified resource in storage.
