@@ -73,7 +73,7 @@ class ProviderController extends Controller
     public function listservice(Request $request): JsonResponse
     {
         if ($request->ajax()) {
-            $services = ServiceProvider::select('serviceprovider.id', 'serviceprovider.name', 'serviceprovider.description')
+            $services = ServiceProvider::select('serviceprovider.id', 'serviceprovider.name', 'serviceprovider.InternetService', 'serviceprovider.CableService', 'serviceprovider.description')
             ->where('serviceprovider.providerId', $request->providerId)
             ->get();
 
@@ -85,8 +85,18 @@ class ProviderController extends Controller
 
     public function addservice(Request $request)
     {
+        $internet = 0;
+        if($request->InternetService) {
+            $internet = 1;
+        }
+        $cable = 0;
+        if($request->CableService) {
+            $cable = 1;
+        }
         $serviceProvider = new ServiceProvider();
         $serviceProvider->name = $request->name;
+        $serviceProvider->InternetService = $internet;
+        $serviceProvider->CableService = $cable;
         $serviceProvider->description = $request->description;
         $serviceProvider->providerId = $request->providerId;
         $serviceProvider->save();
@@ -96,8 +106,16 @@ class ProviderController extends Controller
     
     public function editservice(Request $request): JsonResponse 
     {
+        $internet = 0;
+        if($request->InternetService) {
+            $internet = 1;
+        }
+        $cable = 0;
+        if($request->CableService) {
+            $cable = 1;
+        }
         ServiceProvider::where('id', $request->serviceProviderId)
-            ->update(['name' => $request->name, 'description' => $request->description]);
+            ->update(['name' => $request->name, 'InternetService' => $internet, 'CableService' => $cable, 'description' => $request->description]);
     
         return response()->json(['status'=>'success', 'message'=>'El Servicio fue actualizado']);
     }

@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('serviceprovider', function (Blueprint $table) {
+        Schema::create('paymentmethod', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('InternetService', 0);
-            $table->boolean('CableService', 0);
-            $table->text('description')->nullable();
-            $table->foreignId('providerId')->constrained('provider')->onUpdate('cascade')->onDelete('restrict');
+            $table->text('description');
         });
     }
 
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('serviceprovider');
+        Schema::dropIfExists('paymentmethod');
     }
 };

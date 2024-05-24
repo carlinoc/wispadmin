@@ -16,7 +16,7 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>Proveedor</label>
-                                <x-adminlte-select2 id="providerId" name="providerId" label-class="text-lightblue" data-placeholder="Seleccione una proveedor">
+                                <x-adminlte-select2 id="providerId" name="providerId" label-class="text-lightblue" data-placeholder="Seleccione un proveedor">
                                     <option value=""></option>
                                     @foreach($providers as $provider)
                                         <option value="{{$provider->id}}">{{$provider->name}}</option>
@@ -27,7 +27,7 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>Servicio</label>
-                                <x-adminlte-select2 id="serviceProviderId" name="serviceProviderId" label-class="text-lightblue" data-placeholder="Seleccione una servicio">
+                                <x-adminlte-select2 id="serviceProviderId" name="serviceProviderId" label-class="text-lightblue" data-placeholder="Seleccione un servicio">
                                     <option value=""></option>
                                 </x-adminlte-select2>
                             </div>            
@@ -37,7 +37,12 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>Fecha de Pedido</label>
-                                <input type="text" data-date-format="dd-mm-yyyy" class="form-control" id="DateOrder" name="DateOrder" placeholder="dd-mm-yyyy">
+                                <div class="input-group date">
+                                    <input type="text" data-date-format="dd-mm-yyyy" id="DateOrder" name="DateOrder" class="form-control datetimepicker-input"/>
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
                             </div>            
                         </div>
                         <div class="col-sm">
@@ -51,7 +56,12 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>Fecha de Instalación</label>
-                                <input type="text" data-date-format="dd-mm-yyyy" class="form-control" id="DateInstall" name="DateInstall" placeholder="dd-mm-yyyy">
+                                <div class="input-group date">
+                                    <input type="text" data-date-format="dd-mm-yyyy" id="DateInstall" name="DateInstall" class="form-control datetimepicker-input"/>
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
                             </div>            
                         </div>
                         <div class="col-sm">
@@ -65,7 +75,12 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>Fecha de Inactividad</label>
-                                <input type="text" data-date-format="dd-mm-yyyy" class="form-control" id="DateInactivity" name="DateInactivity" placeholder="dd-mm-yyyy">
+                                <div class="input-group date">
+                                    <input type="text" data-date-format="dd-mm-yyyy" id="DateInactivity" name="DateInactivity" class="form-control datetimepicker-input"/>
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
                             </div>            
                         </div>
                         <div class="col-sm">

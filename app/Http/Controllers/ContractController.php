@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Modem;
+use App\Models\ModemType;
 use App\Models\Client;
 use App\Models\Contract;
 use App\Models\Provider;
@@ -48,7 +50,24 @@ class ContractController extends Controller
 
     public function edit(Request $request): JsonResponse 
     {
-        return response()->json(['status'=>'success', 'message'=>'El contrato fue agregado']);    
+        $dateOrder = Carbon::parse($request->DateOrder);
+        $dateInstall = Carbon::parse($request->DateInstall);
+        $dateInactivity = Carbon::parse($request->DateInactivity);
+        
+        $contract = Contract::find($request->contractId);
+        $contract->serviceProviderId = $request->serviceProviderId;
+        $contract->DateOrder = $dateOrder;
+        $contract->CodeOrder = $request->CodeOrder;
+        $contract->DateInstall = $dateInstall;
+        $contract->CodeInstall = $request->CodeInstall;
+        $contract->DateInactivity = $dateInactivity;
+        $contract->CodeInactivity = $request->CodeInactivity;
+        $contract->PaymentCycle = $request->PaymentCycle;
+        $contract->PaymentAmount = $request->PaymentAmount;
+        $contract->clientId = $request->clientId;
+        $contract->update();
+
+        return response()->json(['status'=>'success', 'message'=>'El contrato fue actualizado']);    
     }
 
     public function remove(Request $request)
@@ -59,7 +78,10 @@ class ContractController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $contracts = Contract::all();
+        $contracts = Contract::select('contract.id', DB::raw("DATE_FORMAT(contract.DateOrder, '%d-%m-%Y') as DateOrder"), DB::raw("DATE_FORMAT(contract.DateInstall, '%d-%m-%Y') as DateInstall"), DB::raw("DATE_FORMAT(contract.DateInactivity, '%d-%m-%Y') as DateInactivity"), 'contract.CodeOrder', 'contract.CodeInstall', 'contract.CodeInactivity', 'contract.PaymentCycle', 'contract.PaymentAmount', 'contract.serviceProviderId', 'contract.clientId', 'serviceprovider.name as service', 'provider.name as provider', 'serviceprovider.providerId')
+            ->join('serviceprovider','serviceprovider.id','=','contract.serviceProviderId')
+            ->join('provider','provider.id','=','serviceprovider.providerId') 
+            ->get();
 
         return response()->json(['contracts' => $contracts]);
     }
@@ -74,43 +96,56 @@ class ContractController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function detail(Request $request)
     {
-        //
+        $modemTypes = ModemType::all();
+        $contract = Contract::select('contract.id', DB::raw("DATE_FORMAT(contract.DateInstall, '%d-%m-%Y') as DateInstall"),'contract.CodeInstall', 'contract.PaymentCycle', 'contract.PaymentAmount', 'contract.clientId', 'contract.serviceProviderId', 'serviceprovider.name as service', 'provider.name as provider', 'serviceprovider.InternetService', 'serviceprovider.CableService', DB::raw("CONCAT(client.name, ' ', client.lastName) as ClientName"))
+            ->join('serviceprovider','serviceprovider.id','=','contract.serviceProviderId')
+            ->join('provider','provider.id','=','serviceprovider.providerId')
+            ->join('client','client.id','=','contract.clientId') 
+            ->where('contract.id', $request->contractId)
+            ->first();
+
+        return view('contract.detail', ['contract' => $contract, 'modemTypes' => $modemTypes]);    
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Contract $contract)
+    public function addmodem(Request $request): JsonResponse
     {
-        //
-    }
-   
+        $row = Modem::where('MAC', $request->MAC)->get();
+        if($row->count() == 0) {
+            $modem = new Modem();
+            $modem->Name = $request->name;
+            $modem->MAC = $request->MAC;
+            $modem->DefaultUrl = $request->DefaultUrl;
+            $modem->DefaultWifiName = $request->DefaultWifiName;
+            $modem->DefaultWifiPassword = $request->DefaultWifiPassword;
+            $modem->ConnectionType = $request->ConnectionType;
+            $modem->State = 1;
+            $modem->modemTypeId = $request->modemTypeId;
+            $modem->serviceProviderId = $request->serviceProviderId;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Contract $contract)
+            $modem->save();
+            
+            return response()->json(['status'=>'success', 'message'=>'Nuevo Modem agregado']);    
+        }else{
+            return response()->json(['status'=>'error', 'message'=>'El MAC ya existe']);    
+        }
+    }
+    
+    public function listmodem(Request $request): JsonResponse
     {
-        //
+        $modems = Modem::select('modem.id', 'modem.name', 'modem.MAC',)
+            ->where('modem.serviceProviderId', $request->serviceProviderId)
+            ->get();
+
+        return response()->json(['modems' => $modems]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Contract $contract)
+    public function removemodem(Request $request)
     {
-        //
+        Modem::find($request->modemId)->delete();      
+        return response()->json(['status'=>'success']);
     }
 }
