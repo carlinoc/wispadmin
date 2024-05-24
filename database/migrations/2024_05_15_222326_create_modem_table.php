@@ -24,6 +24,7 @@ return new class extends Migration
             $table->tinyInteger('State');
             $table->text('Description')->nullable();
             $table->foreignId('modemTypeId')->constrained('modemtype')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('serviceProviderId')->constrained('serviceprovider')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }

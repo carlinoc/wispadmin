@@ -89,6 +89,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/contract/add', [ContractController::class, 'add'])->name('contract.add');
     Route::post('/contract/edit', [ContractController::class, 'edit'])->name('contract.edit');
     Route::post('/contract/remove/{contractId}', [ContractController::class, 'remove'])->name('contract.remove');
+    Route::get('/contract-detail/{contractId}', [ContractController::class, 'detail'])->name('contract.detail');
+    Route::post('/contract/addmodem', [ContractController::class, 'addmodem'])->name('contract.addmodem');
+    Route::get('/contract/listmodem/{serviceProviderId}', [ContractController::class, 'listmodem'])->name('contract.listmodem');
+    Route::post('/contract/removemodem/{modemId}', [ContractController::class, 'removemodem'])->name('contract.removemodem');
 
     Route::get('/brandname', [BrandNameController::class, 'index'])->name('brandname.index');
     Route::post('/brandname/add', [BrandNameController::class, 'add'])->name('brandname.add'); 
@@ -101,5 +105,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/switcher/edit', [SwitcherController::class, 'edit'])->name('switcher.edit');
     Route::post('/switcher/remove', [SwitcherController::class, 'remove'])->name('switcher.remove');
     Route::get('/switcher/list', [SwitcherController::class, 'list'])->name('switcher.list');
-
+    
 });

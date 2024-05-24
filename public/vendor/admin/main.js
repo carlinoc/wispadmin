@@ -91,6 +91,27 @@ function getStateFromDevice(type){
   return _type;
 }
 
+function getStateYesOrNo(state){
+  var _state = '<span class="badge badge-secondary">No</span>';
+  switch(state) {
+    case 0:
+      _state= '<span class="badge badge-secondary">No</span>';
+      break;
+    case 1:
+      _state = '<span class="badge badge-primary">Si</span>';
+      break;
+  }    
+  return _state;
+}
+
+function getFormParams(formId){
+  const data = new URLSearchParams();
+  const myform = document.getElementById(formId);
+  for (const pair of new FormData(myform)) {
+    data.append(pair[0], pair[1]);
+  }
+  return data;  
+}
 
 (function($) {
   $.fn.inputFilter = function(callback, errMsg) {
