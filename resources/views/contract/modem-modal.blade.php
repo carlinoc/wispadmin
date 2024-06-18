@@ -1,12 +1,12 @@
 <!-- Modal -->
-<div class="modal fade" id="addModal" aria-labelledby="addModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalModem" aria-labelledby="addModalLabel" aria-hidden="true">
     <form action="" method="POST" id="frmAddModem">    
         @csrf
         <input type="hidden" id="serviceProviderId" name="serviceProviderId" value="{{ $contract->serviceProviderId }}">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="addModalLabel">Nuevo Modem</h4>
+                    <h4 class="modal-title">Nuevo Modem</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -15,8 +15,8 @@
                     <div class="row">
                         <div class="col-sm">
                             <div class="form-group">
-                                <label>Nombre</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Ingresar el nombre" required>
+                                <label>Rayado</label>
+                                <input type="text" class="form-control" id="MarkCode" name="MarkCode" placeholder="Ingresar el Rayado" required>
                             </div>            
                         </div>
                         <div class="col-sm">
@@ -52,9 +52,9 @@
                                 <label for="ConnectionType">Tipo de conexión</label>
                                 <select class="form-control" name="ConnectionType" id="ConnectionType">
                                     <option value=""> - Seleccione - </option>
-                                    <option value="1">Tipo 1</option>
-                                    <option value="2">Tipo 2</option>
-                                    <option value="3">Tipo 3</option>
+                                    <option value="1">HFC</option>
+                                    <option value="2">Fibra</option>
+                                    <option value="3">Antena</option>
                                 </select>
                             </div>            
                         </div>

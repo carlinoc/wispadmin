@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\MikrotikController;
 use App\Http\Controllers\ModemController;
+use App\Http\Controllers\MovistarDecoController;
 use App\Http\Controllers\BrandNameController;
 use App\Http\Controllers\SwitcherController;
 use Illuminate\Support\Facades\Route;
@@ -82,18 +83,25 @@ Route::middleware('auth')->group(function () {
     Route::post('/modemtype/remove', [ModemTypeController::class, 'remove'])->name('modemtype.remove');
     Route::get('/modemtype/list', [ModemTypeController::class, 'list'])->name('modemtype.list');
 
-    Route::resource('/modem', ModemController::class)->names('modem');
+    Route::resource('/movistardeco', MovistarDecoController::class)->names('movistardeco');
 
+    Route::resource('/modem', ModemController::class)->names('modem');
+    
     Route::get('/contract', [ContractController::class, 'index'])->name('contract.index');
     Route::get('/contract/list', [ContractController::class, 'list'])->name('contract.list');
     Route::get('/contract/listservice/{providerId}', [ContractController::class, 'listservice'])->name('contract.listservice');
     Route::post('/contract/add', [ContractController::class, 'add'])->name('contract.add');
     Route::post('/contract/edit', [ContractController::class, 'edit'])->name('contract.edit');
     Route::post('/contract/remove/{contractId}', [ContractController::class, 'remove'])->name('contract.remove');
+    
     Route::get('/contract-detail/{contractId}', [ContractController::class, 'detail'])->name('contract.detail');
     Route::post('/contract/addmodem', [ContractController::class, 'addmodem'])->name('contract.addmodem');
     Route::get('/contract/listmodem/{serviceProviderId}', [ContractController::class, 'listmodem'])->name('contract.listmodem');
     Route::post('/contract/removemodem/{modemId}', [ContractController::class, 'removemodem'])->name('contract.removemodem');
+
+    Route::post('/contract/addmovistardeco', [ContractController::class, 'addmovistardeco'])->name('contract.addmovistardeco');
+    Route::get('/contract/listmovistardeco/{serviceProviderId}', [ContractController::class, 'listmovistardeco'])->name('contract.listmovistardeco');
+    Route::post('/contract/removemovistardeco/{movistardecoId}', [ContractController::class, 'removemovistardeco'])->name('contract.removemovistardeco');
 
     Route::get('/brandname', [BrandNameController::class, 'index'])->name('brandname.index');
     Route::post('/brandname/add', [BrandNameController::class, 'add'])->name('brandname.add'); 

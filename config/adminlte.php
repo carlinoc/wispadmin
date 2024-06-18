@@ -408,6 +408,11 @@ return [
                     'icon' => 'fas fa-fw fa-wifi',
                 ],
                 [
+                    'text' => 'MovistarDeco',
+                    'url' => '/movistardeco',
+                    'icon' => 'fas fa-fw fa-wifi',
+                ],
+                [
                     'text' => 'Tipo de Modem',
                     'url' => '/modemtype',
                     'icon' => 'fas fa-fw fa-wifi',

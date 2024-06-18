@@ -54,7 +54,7 @@
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Nombre</th>
+                                <th>Rayado</th>
                                 <th>MAC</th>
                                 <th>Opciones</th>
                             </tr>
@@ -62,9 +62,9 @@
                     </table>
                 </div>
             </div>
-            <div class="card card-info collapsed-card">
+            <div id="cardMovistarDeco" class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">Decos</h3>
+                    <h3 id="titleMovistarDeco" class="card-title">Movistar Decos:</h3>
                     <div class="card-tools">
                         <a href="#" id="newDeco" class="btn-sm btn-dark">+ Nuevo</a>
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -73,29 +73,15 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table">
-                        <tbody>
+                    <table id="dtMovistarDecos" class="table">
+                        <thead>
                             <tr>
-                                <td>Functional-requirements.docx</td>
-                                <td>49.8005 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
+                                <td>Id</td>
+                                <td>CASID</td>
+                                <td>CardNumber</td>
+                                <th>Opciones</th>
                             </tr>
-                            <tr>
-                                <td>UAT.pdf</td>
-                                <td>28.4883 kb</td>
-                                <td class="text-right py-0 align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                        </thead>
                     </table>
                 </div>
             </div>
@@ -140,6 +126,7 @@
     </div>
 
     @include('contract.modem-modal')
+    @include('contract.movistardeco-modal')
 @stop
 
 @section('css')
@@ -162,9 +149,24 @@
         let _titleModem = $("#titleModem");
         
         let _dtModems = $("#dtModems");
-        let _modal = $("#addModal");
-        let _modalLabel = $("#addModalLabel");
+        let _modalModem = $("#modalModem");
         let _ds = null;
+
+        let _cardMovistarDeco = $("#cardMovistarDeco");
+        let _titleMovistarDeco = $("#titleMovistarDeco");
+
+        let _casid = $("#CASID");
+        let _cardnumber = $("#CardNumber");
+        let _markcode = $("#MarkCode");
+        let _photo1 = $("#Photo1");
+        let _state = $("#State");
+        let _decotype = $("#DecoType");
+        let _description = $("#Description");
+        let _serviceproviderid = $("#serviceProviderId");
+
+        let _dtMovistarDecos = $("#dtMovistarDecos");
+        let _modalMovistarDeco = $("#modalMovistarDeco");
+        let _dsMovistarDeco = null;
 
         fetchModems();
 
@@ -172,24 +174,18 @@
 
         $('#newModem').on('click', function(e) {
             e.preventDefault();
-            clearForm();
-            _modalLabel.text("Nuevo Modem");
-            _modal.modal('show');
+            clearFormModem();
+            _modalModem.modal('show');
             
             setTimeout(function(){
                 _name.focus();
             }, 300);
         });
 
-        $('#newDeco').on('click', function(e) {
-            e.preventDefault();
-            
-        });
-
         $('#addModem').on('click', function(e) {
             e.preventDefault();
             let elements = [
-                ['name', 'Ingrese el nombre del modem'],
+                ['MarkCode', 'Ingrese Rayado'],
                 ['MAC', 'Ingrese la MAC'],
                 ['ConnectionType', 'Ingrese el tipo de connexión'],
                 ['modemTypeId', 'Ingrese el tipo de modem']
@@ -206,9 +202,12 @@
                 .then(response => response.json())
                 .then(result => {
                     if(result.status=="success"){
-                        _modal.modal('hide');
-                        clearForm();
-                        //_cardModem.CardWidget('toggle');
+                        _modalModem.modal('hide');
+                        clearFormModem();
+                        if(_cardModem.hasClass("collapsed-card")){
+                            _cardModem.CardWidget('toggle');
+                        }
+                        showSuccessMsg(result.message);
                         fetchModems();
                     }
                     if(result.status=="error"){
@@ -274,7 +273,7 @@
                     },
                     {
                         "render": function(data, type, row, meta) {
-                            return row.name;
+                            return row.MarkCode;
                         }
                     },
                     {
@@ -291,7 +290,7 @@
             });
         }
 
-        function clearForm() {
+        function clearFormModem() {
             _name.val("");
             _mac.val("");
             _defaultUrl.val("");
@@ -300,5 +299,138 @@
             _connectionType.val("");
             _modemTypeId.val("").change();
         }
+        
+        fetchMovistarDecos();
+
+        _cardMovistarDeco.CardWidget('toggle');
+
+        $('#newDeco').on('click', function(e) {
+            e.preventDefault();
+            clearFormMovistarDeco();
+            _modalMovistarDeco.modal('show');
+            
+            setTimeout(function(){
+                _casid.focus();
+            }, 300);
+        });
+
+        $('#addMovistarDeco').on('click', function(e) {
+            e.preventDefault();
+            let elements = [
+                ['CASID', 'Ingrese CASID'],
+                ['CardNumber', 'Ingrese CardNumber'],
+                ['MarkCode', 'Ingrese MarkCode'],
+                ['DecoType', 'Ingrese DecoType']
+            ];
+
+            if(emptyfy(elements)) {
+                let route = "{{ route('contract.addmovistardeco') }}";
+                let data = getFormParams('frmAddMovistarDeco');
+
+                fetch(route, {
+                    method: 'post',
+                    body: data,
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if(result.status=="success"){
+                        _modalMovistarDeco.modal('hide');
+                        clearFormMovistarDeco();
+                        if(_cardMovistarDeco.hasClass("collapsed-card")){
+                            _cardMovistarDeco.CardWidget('toggle');
+                        }
+                        showSuccessMsg(result.message);
+                        fetchMovistarDecos();
+                    }
+                    if(result.status=="error"){
+                        showErrorMsg(result.message);
+                    }
+                })
+            }
+        });
+
+        _dtMovistarDecos.on('click', '.removeMovistarDeco', function (e) {
+            e.preventDefault();
+            let movistarDecoId = $(this).data('id');
+            
+            Swal.fire({
+                title: "Atención",
+                text: "Deseas eliminar el MovistarDeco?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch("/contract/removemovistarDeco/" + movistarDecoId, {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "X-CSRF-Token": _token
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if(result.status=="success"){
+                            fetchMovistarDecos();
+                        }
+                    });
+                }
+            });
+        });
+
+        async function fetchMovistarDecos(){
+            let _id = {{ $contract->serviceProviderId }};
+            const response = await fetch("/contract/listmovistardeco/" + _id, {method: 'GET'});
+            if(!response.ok){
+                throw new Error("Error fetch list movistarDeco")       
+            }                    
+            const data = await response.json();
+            _titleMovistarDeco.html('MovistarDecos: ' + data.movistarDecos.length);
+            _dtMovistarDecos.DataTable().destroy();
+            _dtMovistarDecos.DataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false,
+                "data": data.movistarDecos,
+                "responsive": true,
+                order: [[0, 'desc']],
+                "columns": [
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.id;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.CASID;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.CardNumber;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return '<a href="#" data-id="'+row.id+'" class="btn btn-sm btn-danger removeMovistarDeco"><i class="fas fa-trash"></a>';
+                        }
+                    }
+                ]
+            });
+        }
+
+        function clearFormMovistarDeco() {
+            _casid.val("");
+            _cardnumber.val("");
+            _markcode.val("");
+            _photo1.val("");
+            _state.val("");
+            _decotype.val("");
+            _description.val("");
+        }
     </script>
+
 @stop
