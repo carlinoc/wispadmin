@@ -11,19 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('modem', function (Blueprint $table) {
+        Schema::create('movistardeco', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('MAC');
-            $table->string('DefaultUrl')->nullable();;
-            $table->string('DefaultWifiName')->nullable();;
-            $table->string('DefaultWifiPassword')->nullable();;
-            $table->string('photo', 500)->nullable();
-            $table->string('MarkCode')->nullable();;
-            $table->tinyInteger('ConnectionType');
+            $table->string('CASID');
+            $table->string('CardNumber')->nullable();
+            $table->string('MarkCode');
+            $table->string('Photo1')->nullable();
             $table->tinyInteger('State');
+            $table->tinyInteger('DecoType');
             $table->text('Description')->nullable();
-            $table->foreignId('modemTypeId')->constrained('modemtype')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('serviceProviderId')->constrained('serviceprovider')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modem');
+        Schema::dropIfExists('movistardeco');
     }
 };

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modem;
+use App\Models\MovistarDeco;
 use App\Models\ModemType;
 use App\Models\Client;
 use App\Models\Contract;
@@ -116,7 +117,7 @@ class ContractController extends Controller
         $row = Modem::where('MAC', $request->MAC)->get();
         if($row->count() == 0) {
             $modem = new Modem();
-            $modem->Name = $request->name;
+            $modem->MarkCode = $request->MarkCode;
             $modem->MAC = $request->MAC;
             $modem->DefaultUrl = $request->DefaultUrl;
             $modem->DefaultWifiName = $request->DefaultWifiName;
@@ -136,7 +137,7 @@ class ContractController extends Controller
     
     public function listmodem(Request $request): JsonResponse
     {
-        $modems = Modem::select('modem.id', 'modem.name', 'modem.MAC',)
+        $modems = Modem::select('modem.id', 'modem.MarkCode', 'modem.MAC',)
             ->where('modem.serviceProviderId', $request->serviceProviderId)
             ->get();
 
@@ -148,4 +149,41 @@ class ContractController extends Controller
         Modem::find($request->modemId)->delete();      
         return response()->json(['status'=>'success']);
     }
+
+    public function addmovistarDeco(Request $request): JsonResponse
+    {
+        $row = MovistarDeco::where('CASID', $request->CASID)->get();
+        if($row->count() == 0) {
+            $movistarDeco = new MovistarDeco();
+            
+            $movistarDeco->CASID = $request->CASID;
+            $movistarDeco->CardNumber = $request->CardNumber;
+            $movistarDeco->MarkCode = $request->MarkCode;
+            $movistarDeco->State = 1;
+            $movistarDeco->DecoType = $request->DecoType;
+            $movistarDeco->serviceProviderId = $request->serviceProviderId;
+
+            $movistarDeco->save();
+            
+            return response()->json(['status'=>'success', 'message'=>'Nuevo MovistarDeco agregado']);    
+        }else{
+            return response()->json(['status'=>'error', 'message'=>'El CASID ya existe']);    
+        }
+    }
+    
+    public function listmovistarDeco(Request $request): JsonResponse
+    {
+        $movistarDecos = MovistarDeco::select('movistarDeco.id', 'movistarDeco.CASID', 'movistarDeco.CardNumber',)
+            ->where('movistarDeco.serviceProviderId', $request->serviceProviderId)
+            ->get();
+
+        return response()->json(['movistarDecos' => $movistarDecos]);
+    }
+
+    public function removemovistarDeco(Request $request)
+    {
+        MovistarDeco::find($request->movistarDecoId)->delete();      
+        return response()->json(['status'=>'success']);
+    }
+
 }
