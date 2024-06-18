@@ -135,7 +135,7 @@ class MikrotikController extends Controller
 
     public static function getImage($photo){
         if(is_null($photo)){
-            return "images/movie-default.jpg";
+            return "files/image-default.jpg";
         }
         return $photo;
     }

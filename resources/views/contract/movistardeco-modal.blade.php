@@ -2,7 +2,7 @@
 <div class="modal fade" id="modalMovistarDeco" aria-labelledby="addModalLabel" aria-hidden="true">
     <form action="" method="POST" id="frmAddMovistarDeco">    
         @csrf
-        <input type="hidden" id="serviceProviderId" name="serviceProviderId" value="{{ $contract->serviceProviderId }}">
+        <input type="hidden" id="contractId" name="contractId" value="{{ $contract->id }}">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -30,7 +30,7 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>Rayado</label>
-                                <input type="text" class="form-control" id="MarkCode" name="MarkCode" placeholder="Ingresar MarkCode" required>
+                                <input type="text" class="form-control" id="MarkCode1" name="MarkCode" placeholder="Ingresar MarkCode" required>
                             </div>
                         </div>
                         <div class="col-sm">

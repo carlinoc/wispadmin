@@ -18,14 +18,20 @@ class ModemController extends Controller
      */
     public function index(): View
     {
-        $modems = Modem::all();
+        $modems = Modem::select('modem.id', 'modem.MAC', 'modem.MarkCode', 'modem.ConnectionType', 'modem.State', 'modemtype.name as ModemType', 'modem.contractId', 'client.name as clientName', 'client.lastName as clientLastName')
+            ->join('modemtype', 'modemtype.id', '=', 'modem.modemtypeId')
+            ->join('contract', 'contract.id', '=', 'modem.contractId')
+            ->join('client', 'client.id', '=', 'contract.clientId')
+            ->get();
         
         $heads = [
-            'ID',
-            'Name',
             'MAC',
             'Rayado',
-            'Tipo',
+            'Tipo de Modem',
+            'Conexión',
+            'Estado',
+            'Titular',
+            'Nro. Contrato',
             'Opciones'
         ];
         return view('modem.index', ['modems' => $modems, 'heads' => $heads]);
@@ -45,39 +51,35 @@ class ModemController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        //try {
-            $row = Modem::where('MAC', $request->MAC)->get();
-            if($row->count() == 0) {
-                $modem = new Modem();
-                $modem->Name = $request->Name;
-                $modem->MAC = $request->MAC;
-                $modem->DefaultUrl = $request->DefaultUrl;
-                $modem->DefaultWifiName = $request->DefaultWifiName;
-                $modem->DefaultWifiPassword = $request->DefaultWifiPassword;
-                $modem->MarkCode = $request->MarkCode;
-                $modem->ConnectionType = $request->ConnectionType;
-                $modem->State = $request->State;
-                $modem->Description = $request->Description;
-                $modem->modemTypeId = $request->modemTypeId;
+        $row = Modem::where('MAC', $request->MAC)->get();
+        if($row->count() == 0) {
+            $modem = new Modem();
+            $modem->Name = $request->Name;
+            $modem->MAC = $request->MAC;
+            $modem->DefaultUrl = $request->DefaultUrl;
+            $modem->DefaultWifiName = $request->DefaultWifiName;
+            $modem->DefaultWifiPassword = $request->DefaultWifiPassword;
+            $modem->MarkCode = $request->MarkCode;
+            $modem->ConnectionType = $request->ConnectionType;
+            $modem->State = $request->State;
+            $modem->Description = $request->Description;
+            $modem->modemTypeId = $request->modemTypeId;
 
-                $modem->save();
-                
-                if($request->hasFile('photo')){
-                    $path = 'files/modem/';
-                    $file = time() .'-'. $modem->id . '.jpg';
-                    $success = $request->file('photo')->move($path, $file);
-                    if($success){
-                        DB::table('modem')->where('id', $modem->id)->update(['photo' => $path . $file]);
-                    }
+            $modem->save();
+            
+            if($request->hasFile('photo')){
+                $path = 'files/modem/';
+                $file = time() .'-'. $modem->id . '.jpg';
+                $success = $request->file('photo')->move($path, $file);
+                if($success){
+                    DB::table('modem')->where('id', $modem->id)->update(['photo' => $path . $file]);
                 }
-
-                return redirect()->route('modem.index')->with('success', 'Nuevo Modem agregado');
-            }else{
-                return redirect()->route('modem.index')->with('error', 'El MAC ya existe');
             }
-        //} catch (Exception $e) {
-        //    return redirect()->route('modem.index')->with('error', 'Ocurrio un error al guardar');
-        //}
+
+            return redirect()->route('modem.index')->with('success', 'Nuevo Modem agregado');
+        }else{
+            return redirect()->route('modem.index')->with('error', 'El MAC ya existe');
+        }
     }
 
     /**
@@ -85,7 +87,8 @@ class ModemController extends Controller
      */
     public function edit(Modem $modem): View
     {
-        return view('modem.edit', ['mikrotik'=>$modem]);
+        $modemTypes = ModemType::all();
+        return view('modem.edit', ['modem'=>$modem, 'modemTypes'=>$modemTypes]);
     }
 
     /**
@@ -106,17 +109,74 @@ class ModemController extends Controller
             }
         }
 
-        $modem->Model = $request->Model;
-        $modem->MAC = $request->MAC;
-        $modem->Identity = $request->Identity;
-        $modem->AccessCodeUrl = $request->AccessCodeUrl;
-        $modem->AccessCodeUser = $request->AccessCodeUser;
-        $modem->MarkCode= $request->AccessCodePassword;
-        $modem->State = $request->state;
-        $modem->description = $request->description;
+        $modem->name = $request->Name;
+        $modem->DefaultUrl = $request->DefaultUrl;
+        $modem->DefaultWifiName = $request->DefaultWifiName;
+        $modem->DefaultWifiPassword = $request->DefaultWifiPassword;
+        $modem->MarkCode = $request->MarkCode;
+        $modem->ConnectionType = $request->ConnectionType;
+        $modem->State = $request->State;
+        $modem->Description = $request->Description;
+        $modem->modemTypeId = $request->modemTypeId;
 
         $modem->update();
 
         return redirect()->route('modem.index')->with('success', 'Modem Actualizado');
+    }
+
+    public function destroy(Modem $modem)
+    {
+        //validar si se puede eliminar por las relaciones
+        $row = Modem::where('id', $modem->id)->get();
+        if($row->count() > 0) {
+            if(!is_null($row[0]->photo)){
+                File::delete($row[0]->photo);    
+            }
+        }
+        $modem->delete();
+        
+        return redirect()->route('modem.index')->with('success', 'Modem Eliminado');
+    }
+
+    public static function getState($model){
+        $_state="";
+        switch($model){
+            case 1:
+                $_state='<small class="badge badge-info">Nuevo</small>';
+                break;
+            case 2:
+                $_state='<small class="badge badge-success">Activo</small>';
+                break;    
+            case 3:
+                $_state='<small class="badge badge-warning">Inactivo</small>';
+                break;        
+            case 4:
+                $_state='<small class="badge badge-danger">Malogrado</small>';
+                break;            
+        }
+        return $_state;
+    }
+
+    public static function getConnectionType($connection){
+        $_connection="";
+        switch($connection){
+            case 1:
+                $_connection='HFC';
+                break;
+            case 2:
+                $_connection='Fibra';
+                break;    
+            case 3:
+                $_connection='Antena';
+                break;        
+        }
+        return $_connection;
+    }
+
+    public static function getImage($photo){
+        if(is_null($photo)){
+            return "files/image-default.jpg";
+        }
+        return $photo;
     }
 }

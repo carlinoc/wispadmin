@@ -96,11 +96,11 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/contract-detail/{contractId}', [ContractController::class, 'detail'])->name('contract.detail');
     Route::post('/contract/addmodem', [ContractController::class, 'addmodem'])->name('contract.addmodem');
-    Route::get('/contract/listmodem/{serviceProviderId}', [ContractController::class, 'listmodem'])->name('contract.listmodem');
+    Route::get('/contract/listmodem/{contractId}', [ContractController::class, 'listmodem'])->name('contract.listmodem');
     Route::post('/contract/removemodem/{modemId}', [ContractController::class, 'removemodem'])->name('contract.removemodem');
 
     Route::post('/contract/addmovistardeco', [ContractController::class, 'addmovistardeco'])->name('contract.addmovistardeco');
-    Route::get('/contract/listmovistardeco/{serviceProviderId}', [ContractController::class, 'listmovistardeco'])->name('contract.listmovistardeco');
+    Route::get('/contract/listmovistardeco/{contractId}', [ContractController::class, 'listmovistardeco'])->name('contract.listmovistardeco');
     Route::post('/contract/removemovistardeco/{movistardecoId}', [ContractController::class, 'removemovistardeco'])->name('contract.removemovistardeco');
 
     Route::get('/brandname', [BrandNameController::class, 'index'])->name('brandname.index');
