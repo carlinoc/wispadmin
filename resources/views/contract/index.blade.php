@@ -59,6 +59,7 @@
     let _codeOrder = $("#CodeOrder");
     let _codeInstall = $("#CodeInstall");
     let _codeInactivity = $("#CodeInactivity");
+    let _paymentCycle = $("#PaymentCycle");
     let _paymentAmount = $("#PaymentAmount");
     let _clientId = $("#clientId");
 
@@ -66,6 +67,7 @@
     let _modal = $("#addModal");
     let _modalLabel = $("#addModalLabel");
     let _ds=null;
+    let _currentProvider=null;
 
     $(function() {
         $("#DateOrder").datepicker({});
@@ -154,96 +156,30 @@
             _codeOrder.val("");
             _codeInstall.val("");
             _codeInactivity.val("");
+            _paymentCycle.val(1);
             _paymentAmount.val("");
             _clientId.val("").change();
+
+            _currentProvider = null;
         }
         
-    });     
-
-    async function fetchServices(providerId){
-        try{
-            const response = await fetch("/contract/listservice/" + providerId, {method: 'GET'});
-            if(!response.ok){
-                throw new Error("Error fetch services")       
-            }                    
-            const data = await response.json();
-            _serviceProviderId.html('')
-            for (let service of data.services) {
-                var newOption = new Option(service.name, service.id, false, false);
-                _serviceProviderId.append(newOption).trigger('change');
-            }
-        }catch(error){
-            console.log(error);
-        }
-    }
-
-    async function fetchContract(){
-        try{
-            const response = await fetch("/contract/list", {method: 'GET'});
-            if(!response.ok){
-                throw new Error("Error fetch services")       
-            }                    
-            const data = await response.json();
-            _ds = data.contracts;
-            _dtContract.DataTable().destroy();
-            _dtContract.DataTable({
-                "data": data.contracts,
-                "responsive": true,
-                order: [[0, 'desc']],
-                "columns": [
-                    {
-                        "render": function(data, type, row, meta) {
-                            return row.id;
-                        }
-                    },
-                    {
-                        "render": function(data, type, row, meta) {
-                            return row.serviceProviderId;
-                        }
-                    },
-                    {
-                        "render": function(data, type, row, meta) {
-                            return row.serviceProviderId;
-                        }
-                    },
-                    {
-                        "render": function(data, type, row, meta) {
-                            return row.DateOrder;
-                        }
-                    },
-                    {
-                        "render": function(data, type, row, meta) {
-                            return row.DateInstall;
-                        }
-                    },
-                    {
-                        "render": function(data, type, row, meta) {
-                            return row.PaymentCycle;
-                        }
-                    },
-                    {
-                        "render": function(data, type, row, meta) {
-                            return row.PaymentAmount;
-                        }
-                    },
-                    {
-                        "render": function(data, type, row, meta) {
-                            return '<a href="/contract-detail/'+row.id+'" class="btn btn-sm btn-warning detailContract"><i class="far fa-eye"></i></a> <a href="#" data-index="'+meta.row+'" class="btn btn-sm btn-info editContract"><i class="far fa-edit"></i></a> <a href="#" data-id="'+row.id+'" class="btn btn-sm btn-danger removeContract"><i class="far fa-trash-alt"></i></a>';
-                        }
-                    }
-                ]
-            });
-        }catch(error){
-            console.log(error);
-        }
-
         _dtContract.on('click', '.editContract', function (e) {
             e.preventDefault();
             let index = $(this).data('index');
             let rw = _ds[index];
             with (rw) {
                 _contractId.val(id);
-                
+                _currentProvider = serviceProviderId;
+                _providerId.val(providerId).change();
+                _dateOrder.val(DateOrder);
+                _codeOrder.val(CodeOrder);
+                _dateInstall.val(DateInstall);
+                _codeInstall.val(CodeInstall);
+                _dateInactivity.val(DateInactivity);
+                _codeInactivity.val(CodeInactivity);
+                _paymentCycle.val(PaymentCycle);
+                _paymentAmount.val(PaymentAmount);
+                _clientId.val(clientId).change();
             }
             
             _modalLabel.text("Editar Contrato");
@@ -281,6 +217,88 @@
                 }
             });
         });
+    });     
+
+    async function fetchServices(providerId){
+        try{
+            const response = await fetch("/contract/listservice/" + providerId, {method: 'GET'});
+            if(!response.ok){
+                throw new Error("Error fetch services")       
+            }                    
+            const data = await response.json();
+            _serviceProviderId.html('')
+            for (let service of data.services) {
+                var newOption = new Option(service.name, service.id, false, false);
+                _serviceProviderId.append(newOption).trigger('change');
+            }
+            
+            if(_currentProvider != null){
+                _serviceProviderId.val(_currentProvider).change();
+            }
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    async function fetchContract(){
+        try{
+            const response = await fetch("/contract/list", {method: 'GET'});
+            if(!response.ok){
+                throw new Error("Error fetch services")       
+            }                    
+            const data = await response.json();
+            _ds = data.contracts;
+            _dtContract.DataTable().destroy();
+            _dtContract.DataTable({
+                "data": data.contracts,
+                "responsive": true,
+                order: [[0, 'desc']],
+                "columns": [
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.id;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.provider;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.service;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.DateOrder;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.DateInstall;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.PaymentCycle;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return row.PaymentAmount;
+                        }
+                    },
+                    {
+                        "render": function(data, type, row, meta) {
+                            return '<a href="/contract-detail/'+row.id+'" class="btn btn-sm btn-warning detailContract"><i class="far fa-eye"></i></a> <a href="#" data-index="'+meta.row+'" class="btn btn-sm btn-info editContract"><i class="far fa-edit"></i></a> <a href="#" data-id="'+row.id+'" class="btn btn-sm btn-danger removeContract"><i class="far fa-trash-alt"></i></a>';
+                        }
+                    }
+                ]
+            });
+        }catch(error){
+            console.log(error);
+        }
     }
 </script>        
 @stop

@@ -17,6 +17,20 @@
                         <label for="name">Nombre</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Nombre del Servicio">
                     </div>
+                    <div class="row mt-2">
+                        <div class="col-sm">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="InternetService" name="InternetService">
+                                <label class="custom-control-label" for="InternetService">Internet</label>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="CableService" name="CableService">
+                                <label class="custom-control-label" for="CableService">Cable</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group mt-2">
                         <label class="col-form-label" for="description"><i class="fas fa-check"></i> Descripción</label>
                         <textarea class="form-control" rows="3" id="description" name="description" placeholder="Breve descripción"></textarea>

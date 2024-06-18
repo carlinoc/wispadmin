@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Perfiles de la cuenta')
+@section('title', 'Servicios del proveedor')
 
 @section('content_header')
 <div class="row">
@@ -30,7 +30,8 @@
                         <tr>
                         <th>Id</th>
                         <th>Servicio</th>
-                        <th>Descripción</th>
+                        <th>Internet</th>
+                        <th>Cable</th>
                         <th>Opciones</th>
                         </tr>
                     </thead>
@@ -49,18 +50,22 @@
 @section('js')
 <script src="/vendor/admin/main.js"></script>
 <script>
+    let _serviceproviderId = $("#serviceProviderId");
+    let _name = $("#name");
+    let _internetService = $("#InternetService");
+    let _cableService = $("#CableService");
+    let _description = $("#description");
+    let _providerId = $("#providerId");
+
+    let _dtServiceProvider = $("#dtServiceProvider");
+    let _modal = $("#addModal");
+    let _modalLabel = $("#addModalLabel");
+    let _ds=null;
+
     var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
     $(document).ready(function() {
-        let _serviceproviderId = $("#serviceProviderId");
-        let _name = $("#name");
-        let _description = $("#description");
-        let _providerId = $("#providerId");
-
-        let _dtServiceProvider = $("#dtServiceProvider");
-        let _modal = $("#addModal");
-        let _modalLabel = $("#addModalLabel");
-        let _ds=null;
+        
 
         function fetch() {
             $.ajax({
@@ -87,7 +92,12 @@
                             },
                             {
                                 "render": function(data, type, row, meta) {
-                                    return row.description;
+                                    return getStateYesOrNo(row.InternetService);
+                                }
+                            },
+                            {
+                                "render": function(data, type, row, meta) {
+                                    return getStateYesOrNo(row.CableService);
                                 }
                             },
                             {
@@ -116,6 +126,8 @@
         function clearForm() {
             _serviceproviderId.val("");
             _name.val("");
+            _internetService.prop("checked", false);
+            _cableService.prop("checked", false);
             _description.val("");
         }
         
@@ -167,6 +179,16 @@
             with (rw) {
                 _serviceproviderId.val(id);
                 _name.val(name);
+                if(InternetService==1){
+                    _internetService.prop("checked", true);    
+                }else{
+                    _internetService.prop("checked", false);    
+                }
+                if(CableService==1){
+                    _cableService.prop("checked", true);    
+                }else{
+                    _cableService.prop("checked", false);    
+                }
                 _description.val(description);
             }
             
