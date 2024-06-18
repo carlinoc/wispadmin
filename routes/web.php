@@ -12,6 +12,7 @@ use App\Http\Controllers\SwitcherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StreamingTvController;
 use App\Http\Controllers\ModemTypeController;
+use App\Http\Controllers\PaymentMethodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,5 +114,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/switcher/edit', [SwitcherController::class, 'edit'])->name('switcher.edit');
     Route::post('/switcher/remove', [SwitcherController::class, 'remove'])->name('switcher.remove');
     Route::get('/switcher/list', [SwitcherController::class, 'list'])->name('switcher.list');
+
+    Route::get('/paymentmethod', [PaymentMethodController::class, 'index'])->name('paymentmethod.index');
+    Route::get('/paymentmethod/list', [PaymentMethodController::class, 'list'])->name('paymentmethod.list');
+    Route::post('/paymentmethod/add', [PaymentMethodController::class, 'add'])->name('paymentmethod.add'); 
+    Route::post('/paymentmethod/edit', [PaymentMethodController::class, 'edit'])->name('paymentmethod.edit');
+    Route::post('/paymentmethod/remove/{paymentMethodId}', [PaymentMethodController::class, 'remove'])->name('paymentmethod.remove');
     
 });
