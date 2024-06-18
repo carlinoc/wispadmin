@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->dateTime('DateOrder');
             $table->dateTime('DateInstall')->nullable();
-            $table->dateTime('DateInactivity')->nullable();;
-            $table->string('CodeOrder')->nullable();;
-            $table->string('CodeInstall')->nullable();;
-            $table->string('CodeInactivity')->nullable();;
+            $table->dateTime('DateInactivity')->nullable();
+            $table->string('CodeOrder')->nullable();
+            $table->string('CodeInstall')->nullable();
+            $table->string('CodeInactivity')->nullable();
             $table->integer('PaymentCycle')->default(0);
             $table->decimal('PaymentAmount', $precision=8, $escala=2)->default(0)->nullable(false);
             $table->foreignId('serviceProviderId')->constrained('serviceprovider')->onUpdate('cascade')->onDelete('restrict');
