@@ -139,7 +139,7 @@
         let _token = document.head.querySelector("[name~=csrf-token][content]").content;
 
         let _cardModem = $("#cardModem");
-        let _name = $("#name");
+        let _markcode0 = $("#MarkCode0");
         let _mac = $("#MAC");
         let _defaultUrl = $("#DefaultUrl");
         let _defaultWifiName = $("#DefaultWifiName");
@@ -157,7 +157,7 @@
 
         let _casid = $("#CASID");
         let _cardnumber = $("#CardNumber");
-        let _markcode = $("#MarkCode");
+        let _markcode1 = $("#MarkCode1");
         let _photo1 = $("#Photo1");
         let _state = $("#State");
         let _decotype = $("#DecoType");
@@ -178,14 +178,14 @@
             _modalModem.modal('show');
             
             setTimeout(function(){
-                _name.focus();
+                _markcode0.focus();
             }, 300);
         });
 
         $('#addModem').on('click', function(e) {
             e.preventDefault();
             let elements = [
-                ['MarkCode', 'Ingrese Rayado'],
+                ['MarkCode0', 'Ingrese Rayado'],
                 ['MAC', 'Ingrese la MAC'],
                 ['ConnectionType', 'Ingrese el tipo de connexión'],
                 ['modemTypeId', 'Ingrese el tipo de modem']
@@ -249,8 +249,8 @@
         });
 
         async function fetchModems(){
-            let _id = {{ $contract->serviceProviderId }};
-            const response = await fetch("/contract/listmodem/" + _id, {method: 'GET'});
+            let contractId = {{ $contract->id }};
+            const response = await fetch("/contract/listmodem/" + contractId, {method: 'GET'});
             if(!response.ok){
                 throw new Error("Error fetch list modem")       
             }                    
@@ -291,7 +291,7 @@
         }
 
         function clearFormModem() {
-            _name.val("");
+            _markcode0.val("");
             _mac.val("");
             _defaultUrl.val("");
             _defaultWifiName.val("");
@@ -319,7 +319,7 @@
             let elements = [
                 ['CASID', 'Ingrese CASID'],
                 ['CardNumber', 'Ingrese CardNumber'],
-                ['MarkCode', 'Ingrese MarkCode'],
+                ['MarkCode1', 'Ingrese MarkCode'],
                 ['DecoType', 'Ingrese DecoType']
             ];
 
@@ -381,8 +381,8 @@
         });
 
         async function fetchMovistarDecos(){
-            let _id = {{ $contract->serviceProviderId }};
-            const response = await fetch("/contract/listmovistardeco/" + _id, {method: 'GET'});
+            let contractId = {{ $contract->id }};
+            const response = await fetch("/contract/listmovistardeco/" + contractId, {method: 'GET'});
             if(!response.ok){
                 throw new Error("Error fetch list movistarDeco")       
             }                    
@@ -425,7 +425,7 @@
         function clearFormMovistarDeco() {
             _casid.val("");
             _cardnumber.val("");
-            _markcode.val("");
+            _markcode1.val("");
             _photo1.val("");
             _state.val("");
             _decotype.val("");

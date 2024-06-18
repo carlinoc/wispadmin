@@ -192,7 +192,7 @@
             
             Swal.fire({
                 title: "Atención",
-                text: "Deseas eliminar la sección?",
+                text: "Deseas eliminar el contrato?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -212,6 +212,9 @@
                     .then(result => {
                         if(result.status=="success"){
                             fetchContract();
+                        }
+                        if(result.status=="error"){
+                            showErrorMessage(result.message);
                         }
                     });
                 }

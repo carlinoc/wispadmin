@@ -20,7 +20,7 @@ return new class extends Migration
             $table->tinyInteger('State');
             $table->tinyInteger('DecoType');
             $table->text('Description')->nullable();
-            $table->foreignId('serviceProviderId')->constrained('serviceprovider')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('contractId')->constrained('contract')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }
