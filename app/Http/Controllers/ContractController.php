@@ -73,6 +73,7 @@ class ContractController extends Controller
 
     public function remove(Request $request)
     {
+
         Contract::find($request->contractId)->delete();      
         return response()->json(['status'=>'success']);
     }
@@ -125,7 +126,7 @@ class ContractController extends Controller
             $modem->ConnectionType = $request->ConnectionType;
             $modem->State = 1;
             $modem->modemTypeId = $request->modemTypeId;
-            $modem->serviceProviderId = $request->serviceProviderId;
+            $modem->contractId = $request->contractId;
 
             $modem->save();
             
@@ -138,7 +139,7 @@ class ContractController extends Controller
     public function listmodem(Request $request): JsonResponse
     {
         $modems = Modem::select('modem.id', 'modem.MarkCode', 'modem.MAC',)
-            ->where('modem.serviceProviderId', $request->serviceProviderId)
+            ->where('modem.contractId', $request->contractId)
             ->get();
 
         return response()->json(['modems' => $modems]);
@@ -161,7 +162,7 @@ class ContractController extends Controller
             $movistarDeco->MarkCode = $request->MarkCode;
             $movistarDeco->State = 1;
             $movistarDeco->DecoType = $request->DecoType;
-            $movistarDeco->serviceProviderId = $request->serviceProviderId;
+            $movistarDeco->contractId = $request->contractId;
 
             $movistarDeco->save();
             
@@ -174,7 +175,7 @@ class ContractController extends Controller
     public function listmovistarDeco(Request $request): JsonResponse
     {
         $movistarDecos = MovistarDeco::select('movistarDeco.id', 'movistarDeco.CASID', 'movistarDeco.CardNumber',)
-            ->where('movistarDeco.serviceProviderId', $request->serviceProviderId)
+            ->where('movistarDeco.contractId', $request->contractId)
             ->get();
 
         return response()->json(['movistarDecos' => $movistarDecos]);

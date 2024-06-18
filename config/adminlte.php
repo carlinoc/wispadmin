@@ -358,6 +358,11 @@ return [
             'icon' => 'fas fa-fw fa-comment-dollar',
         ],
         [
+            'text' => 'Métodos de Pagos',
+            'url' => '/paymentmethod',
+            'icon' => 'fas fa-fw fa-wallet',
+        ],
+        [
             'text' => 'Servicios',
             'url' => '#',
             'icon' => 'fas fa-fw fa-address-card',

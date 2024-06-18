@@ -8,26 +8,32 @@
 
 @section('content')
     <div>
-        <div class="row">
-            <div class="form-group col-md-6">
-                <a href="/modem/create" class="btn btn-primary">Nuevo Modem</a>
-            </div>    
-        </div>
-    </div>
-
-    <div>
         <x-adminlte-card>
             <div class="card-body">
                 <x-adminlte-datatable id="dtModem" :heads="$heads" class="hover">
                     @foreach($modems as $modem)
                         <tr>
-                            <td>{{ $modem->id }}</td>
-                            <td>{{ $modem->name }}</td>
                             <td>{{ $modem->MAC }}</td>
-                            <td>{{ $modem->Markcode }}</td>
-                            <td>{{ $modem->modemTypeId }}</td>
+                            <td>{{ $modem->MarkCode }}</td>
+                            <td>{{ $modem->ModemType }}</td>
                             <td>
-                                <a href="/modem/{{$modem->id}}/edit" class="btn btn-sm btn-info">Editar</a>
+                                @php
+                                    $conn = App\Http\Controllers\ModemController::getConnectionType($modem->ConnectionType);
+                                    echo($conn)
+                                @endphp
+                            </td>
+                            <td>
+                                @php
+                                    $state = App\Http\Controllers\ModemController::getState($modem->State);
+                                    echo($state)
+                                @endphp
+                            </td>
+                            <td>{{ $modem->clientName }} {{ $modem->clientLastName }}</td>
+                            <td> 
+                                <a href="/contract-detail/{{ $modem->contractId }}">{{ $modem->contractId }}</a>
+                            </td>
+                            <td>
+                                <a href="/modem/{{$modem->id}}/edit" class="btn btn-sm btn-info"><i class="far fa-edit"></i></a>
 
                                 <form action="{{route('modem.destroy', $modem)}}" method="post" class="d-inline">
                                     @csrf

@@ -12,6 +12,7 @@ use App\Http\Controllers\SwitcherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StreamingTvController;
 use App\Http\Controllers\ModemTypeController;
+use App\Http\Controllers\PaymentMethodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,11 +96,11 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/contract-detail/{contractId}', [ContractController::class, 'detail'])->name('contract.detail');
     Route::post('/contract/addmodem', [ContractController::class, 'addmodem'])->name('contract.addmodem');
-    Route::get('/contract/listmodem/{serviceProviderId}', [ContractController::class, 'listmodem'])->name('contract.listmodem');
+    Route::get('/contract/listmodem/{contractId}', [ContractController::class, 'listmodem'])->name('contract.listmodem');
     Route::post('/contract/removemodem/{modemId}', [ContractController::class, 'removemodem'])->name('contract.removemodem');
 
     Route::post('/contract/addmovistardeco', [ContractController::class, 'addmovistardeco'])->name('contract.addmovistardeco');
-    Route::get('/contract/listmovistardeco/{serviceProviderId}', [ContractController::class, 'listmovistardeco'])->name('contract.listmovistardeco');
+    Route::get('/contract/listmovistardeco/{contractId}', [ContractController::class, 'listmovistardeco'])->name('contract.listmovistardeco');
     Route::post('/contract/removemovistardeco/{movistardecoId}', [ContractController::class, 'removemovistardeco'])->name('contract.removemovistardeco');
 
     Route::get('/brandname', [BrandNameController::class, 'index'])->name('brandname.index');
@@ -113,5 +114,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/switcher/edit', [SwitcherController::class, 'edit'])->name('switcher.edit');
     Route::post('/switcher/remove', [SwitcherController::class, 'remove'])->name('switcher.remove');
     Route::get('/switcher/list', [SwitcherController::class, 'list'])->name('switcher.list');
+
+    Route::get('/paymentmethod', [PaymentMethodController::class, 'index'])->name('paymentmethod.index');
+    Route::get('/paymentmethod/list', [PaymentMethodController::class, 'list'])->name('paymentmethod.list');
+    Route::post('/paymentmethod/add', [PaymentMethodController::class, 'add'])->name('paymentmethod.add'); 
+    Route::post('/paymentmethod/edit', [PaymentMethodController::class, 'edit'])->name('paymentmethod.edit');
+    Route::post('/paymentmethod/remove/{paymentMethodId}', [PaymentMethodController::class, 'remove'])->name('paymentmethod.remove');
     
 });
